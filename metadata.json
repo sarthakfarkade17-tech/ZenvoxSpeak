@@ -1,0 +1,6 @@
+{
+  "name": "Fluently",
+  "description": "Mobile-first English conversation coach with live AI voice tutoring, pronunciation scoring, daily vocabulary, and interactive grammar quizzes.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

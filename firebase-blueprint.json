@@ -1,0 +1,189 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Learner profile and aggregate English conversation mastery metrics.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the learner."
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Learner display name."
+        },
+        "level": {
+          "type": "string",
+          "enum": ["A2", "B1", "B2", "C1"],
+          "description": "Target CEFR English conversation level."
+        },
+        "dailyGoalMinutes": {
+          "type": "integer",
+          "description": "Daily conversation practice goal in minutes."
+        },
+        "streakDays": {
+          "type": "integer",
+          "description": "Consecutive days of English conversation practice."
+        },
+        "xpTotal": {
+          "type": "integer",
+          "description": "Total experience points earned across exercises."
+        },
+        "lastPracticeDate": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 20,
+          "description": "ISO date string (YYYY-MM-DD) of last completed exercise."
+        },
+        "vocabMasteredCount": {
+          "type": "integer",
+          "description": "Total number of mastered conversational words/phrases."
+        },
+        "quizzesCompleted": {
+          "type": "integer",
+          "description": "Total number of completed grammar quizzes."
+        },
+        "pronunciationAvg": {
+          "type": "number",
+          "description": "Rolling average pronunciation accuracy percentage."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last update timestamp."
+        }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "level",
+        "dailyGoalMinutes",
+        "streakDays",
+        "xpTotal",
+        "lastPracticeDate",
+        "vocabMasteredCount",
+        "quizzesCompleted",
+        "pronunciationAvg",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "VocabProgress": {
+      "title": "VocabProgress",
+      "description": "Per-item vocabulary mastery state for a learner.",
+      "type": "object",
+      "properties": {
+        "wordId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "word": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "status": {
+          "type": "string",
+          "enum": ["learning", "mastered"]
+        },
+        "correctCount": {
+          "type": "integer"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "wordId",
+        "userId",
+        "word",
+        "status",
+        "correctCount",
+        "updatedAt"
+      ]
+    },
+    "PracticeSession": {
+      "title": "PracticeSession",
+      "description": "Completed practice log for AI Tutor, pronunciation, grammar, or vocabulary.",
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["tutor", "pronunciation", "grammar", "vocabulary"]
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "score": {
+          "type": "integer"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "sessionId",
+        "userId",
+        "mode",
+        "topic",
+        "score",
+        "summary",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Learner profile and aggregate progress document owned by userId."
+    },
+    "/users/{userId}/vocabProgress/{wordId}": {
+      "schema": { "$ref": "#/entities/VocabProgress" },
+      "description": "Mastery progress for individual conversational vocabulary items."
+    },
+    "/users/{userId}/practiceSessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/PracticeSession" },
+      "description": "Completed practice logs across tutor, pronunciation, grammar, and vocabulary."
+    }
+  }
+}
